@@ -4,27 +4,27 @@ import numpy as np
 import os
 import gdown
 
-# Load model from Google Drive if not downloaded
+# --- Load model from Google Drive ---
 @st.cache_resource
 def load_model():
     model_path = "Best87K.h5"
     if not os.path.exists(model_path):
         with st.spinner("⏬ Downloading model from Google Drive..."):
-            file_id = "1f6CCMxy5bIFliokxIWimliyy__3bsykk"  # Replace with your actual file ID
-            gdown.download(f"https://drive.google.com/uc?id={file_id}", model_path, quiet=False)
+            file_id = "1f6CCMxy5bIFliokxIWimliyy__3bsykk"
+            url = f"https://drive.google.com/uc?id={file_id}"
+            gdown.download(url, model_path, quiet=False, use_cookies=True)
     return tf.keras.models.load_model(model_path)
 
+model = load_model()
 
-# TensorFlow Model Prediction
+# --- Predict function ---
 def model_prediction(test_image):
-    model = tf.keras.models.load_model("Best87K.h5")
     image = tf.keras.preprocessing.image.load_img(test_image, target_size=(128, 128))
-    input_arr = tf.keras.preprocessing.image.img_to_array(image)
-    input_arr = np.array([input_arr])  # Convert single image to batch
+    input_arr = tf.keras.preprocessing.image.img_to_array(image) / 255.0
+    input_arr = np.expand_dims(input_arr, axis=0)
     predictions = model.predict(input_arr)
-    max_confidence = np.max(predictions)
-    result_index = np.argmax(predictions)
-    return result_index, max_confidence
+    return np.argmax(predictions), np.max(predictions)
+
 
 # Class names list (49 classes)
 class_name = [
@@ -96,126 +96,48 @@ recommendations = {
     'Tomato___healthy': "Healthy tomato plant. Maintain balanced fertilization."
 }
 
-# Sidebar
+# --- Sidebar ---
 st.sidebar.title("Dashboard")
 app_mode = st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"])
 
-# Home Page with Logo
+# --- Home Page ---
 if app_mode == "Home":
     st.image("Header.png", width=200)
-
-    st.header("AgriVision AI V1.0 - PROTOTYPE-")
-    image_path = "home.jpg"
-    st.image(image_path, use_container_width=True)
-
+    st.header("AgriVision AI V1.0 - PROTOTYPE")
+    st.image("home.jpg", use_container_width=True)
     st.markdown("""
-    Welcome to AgriVision AI V1.0, a Plant Disease Recognition System! 🌿🔍
-
-    Designed, tested & deployed by **NAWA's** AI-Division to help identify plant diseases efficiently.
-    Upload an image of a plant, and our system will analyze it to detect any signs of disease.
-
-    ### How It Works
-    1. **Upload Image:** Go to the **Disease Recognition** page.
-    2. **Analysis:** Our AI model analyzes the image.
-    3. **Results:** View results and recommendations.
-
-    ### Why Choose Us?
-    - **Accurate:** Trained on over 74,000 images across 49 classes.
-    - **User-Friendly:** Clean, responsive interface.
-    - **Fast & Efficient:** Predictions in seconds.
-
-    ### Get Started
-    Head over to the **Disease Recognition** tab to try it out!
+    Welcome to AgriVision AI 🌿🔍  
+    Upload a plant leaf image to identify potential diseases and get recommendations.
     """)
 
-# About Page
+# --- About Page ---
 elif app_mode == "About":
     st.header("About the Project")
     st.markdown("""
-    ### 🧠 Model Overview
-    This model is trained on a diverse dataset of **74,016 images** belonging to **49 classes**.
-    It uses deep learning to detect various **plant diseases** and distinguish them from healthy samples.
-
-    ### 🌱 Supported Plant Types
-
-    The system supports a wide range of crops and fruits, including:
-
-    #### 🍎 Apple
-    - Apple scab, Black rot, Cedar apple rust, Healthy
-
-    #### 🫐 Blueberry
-    - Healthy
-
-    #### 🍒 Cherry (incl. sour)
-    - Powdery mildew, Healthy
-
-    #### 🌽 Corn (maize)
-    - Cercospora leaf spot, Common rust, Northern leaf blight, Healthy
-
-    #### 🍇 Grape
-    - Black rot, Esca (Black Measles), Leaf blight, Healthy
-
-    #### 🫒 Olive
-    - Aculus olearius, Anthracnose, Fusarium Wilt, Peacock Spots, Verticillium Wilt, Xylella fastidiosa, Olive Knot,
-      Olive fruit fly, Sooty Mold, OVYaV virus, Healthy
-
-    #### 🍊 Orange
-    - Huanglongbing (Citrus Greening)
-
-    #### 🍑 Peach
-    - Bacterial spot, Healthy
-
-    #### 🫑 Bell Pepper
-    - Bacterial spot, Healthy
-
-    #### 🥔 Potato
-    - Early blight, Late blight, Healthy
-
-    #### 🍓 Strawberry
-    - Leaf scorch, Healthy
-
-    #### 🫘 Soybean, 🧅 Squash, 🍇 Raspberry
-    - Healthy
-
-    #### 🍅 Tomato
-    - Bacterial spot, Early blight, Late blight, Leaf Mold, Septoria leaf spot,
-      Spider mites, Target Spot, Yellow Leaf Curl Virus, Mosaic Virus, Healthy
-
-    These classes were chosen based on real agricultural threats across various regions.
-
-    ### 📁 Dataset Summary
-    - **Training images:** 74,016
-    - **Classes:** 49
-    - **Input size:** 128x128 RGB
+    Deep learning model trained on 74,000+ leaf images across 49 classes.  
+    Helps farmers detect and treat diseases in crops quickly.
     """)
-    
-# Disease Recognition Page
+
+# --- Disease Recognition ---
 elif app_mode == "Disease Recognition":
     st.header("Disease Recognition")
-    test_image = st.file_uploader("Choose an image of a plant leaf:")
+    test_image = st.file_uploader("Upload a plant leaf image:", type=["jpg", "jpeg", "png"])
 
     if test_image is not None:
         if st.button("Show Image"):
             st.image(test_image, use_column_width=True)
 
         if st.button("Predict"):
-            st.snow()
-            st.write("🔎 Analyzing image...")
+            with st.spinner("Analyzing image..."):
+                result_index, confidence = model_prediction(test_image)
 
-            result_index, confidence = model_prediction(test_image)
-
-            st.write(f"📊 Prediction Confidence: **{confidence:.2f}**")
+            st.write(f"📊 Confidence: **{confidence:.2f}**")
 
             if confidence < 0.5:
-                st.warning("⚠️ The model does NOT confidently recognize this disease.")
-                st.info("Please try with a clearer or different leaf image.")
+                st.warning("⚠️ Low confidence. Try a clearer image.")
             elif 0 <= result_index < len(class_name):
                 disease = class_name[result_index]
-                st.success(f"✅ Model predicts: **{disease}**")
-
-                # Show recommendation from dictionary
-                recommendation_message = recommendations.get(disease, "🧪 No specific recommendation available yet.")
-                st.info(f"💡 Recommendation: {recommendation_message}")
-
+                st.success(f"✅ Prediction: **{disease}**")
+                st.info(f"💡 Recommendation: {recommendations.get(disease, 'No recommendation available.')}")
             else:
-                st.error("❌ Invalid prediction index. Possible model/data mismatch.")
+                st.error("❌ Prediction index is invalid.")
