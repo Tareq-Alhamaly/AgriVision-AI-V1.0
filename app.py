@@ -121,23 +121,27 @@ elif app_mode == "About":
 # --- Disease Recognition ---
 elif app_mode == "Disease Recognition":
     st.header("Disease Recognition")
-    test_image = st.file_uploader("Upload a plant leaf image:", type=["jpg", "jpeg", "png"])
+    test_image = st.file_uploader("Upload a plant leaf image:")
 
     if test_image is not None:
         if st.button("Show Image"):
             st.image(test_image, use_column_width=True)
 
         if st.button("Predict"):
+            st.snow()
             with st.spinner("Analyzing image..."):
+                
                 result_index, confidence = model_prediction(test_image)
 
             st.write(f"📊 Confidence: **{confidence:.2f}**")
 
             if confidence < 0.5:
-                st.warning("⚠️ Low confidence. Try a clearer image.")
+                st.warning("⚠️ The model does NOT confidently recognize this disease.")
+                st.info("Please try with a clearer or different leaf image.")
             elif 0 <= result_index < len(class_name):
                 disease = class_name[result_index]
                 st.success(f"✅ Prediction: **{disease}**")
-                st.info(f"💡 Recommendation: {recommendations.get(disease, 'No recommendation available.')}")
+                recommendation_message = recommendations.get(disease, "🧪 No specific recommendation available yet.")
+                st.info(f"💡 Recommendation: {recommendation_message}")
             else:
                 st.error("❌ Prediction index is invalid.")
