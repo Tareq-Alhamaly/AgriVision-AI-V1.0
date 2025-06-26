@@ -96,28 +96,100 @@ recommendations = {
     'Tomato___healthy': "Healthy tomato plant. Maintain balanced fertilization."
 }
 
-# --- Sidebar ---
+
+# Sidebar
 st.sidebar.title("Dashboard")
 app_mode = st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"])
 
-# --- Home Page ---
+# Home Page with Logo
 if app_mode == "Home":
     st.image("Header.png", width=200)
-    st.header("AgriVision AI V1.0 - PROTOTYPE")
-    st.image("home.jpg", use_container_width=True)
+
+    st.header("AgriVision AI V1.0 -PROTOTYPE-")
+    image_path = "home.jpg"
+    st.image(image_path, use_container_width=True)
+
     st.markdown("""
-    Welcome to AgriVision AI 🌿🔍  
-    Upload a plant leaf image to identify potential diseases and get recommendations.
+    Welcome to AgriVision AI V1.0, a Plant Disease Recognition System! 🌿🔍
+
+    Designed, tested & deployed by **NAWA's** AI-Division to help identify plant diseases efficiently.
+    Upload an image of a plant, and our system will analyze it to detect any signs of disease.
+
+    ### How It Works
+    1. **Upload Image:** Go to the **Disease Recognition** page.
+    2. **Analysis:** Our AI model analyzes the image.
+    3. **Results:** View results and recommendations.
+
+    ### Why Choose Us?
+    - **Accurate:** Trained on over 74,000 images across 49 classes.
+    - **User-Friendly:** Clean, responsive interface.
+    - **Fast & Efficient:** Predictions in seconds.
+
+    ### Get Started
+    Head over to the **Disease Recognition** tab to try it out!
     """)
 
-# --- About Page ---
+# About Page
 elif app_mode == "About":
     st.header("About the Project")
     st.markdown("""
-    Deep learning model trained on 74,000+ leaf images across 49 classes.  
-    Helps farmers detect and treat diseases in crops quickly.
-    """)
+    ### 🧠 Model Overview
+    This model is trained on a diverse dataset of **74,016 images** belonging to **49 classes**.
+    It uses deep learning to detect various **plant diseases** and distinguish them from healthy samples.
 
+    ### 🌱 Supported Plant Types
+
+    The system supports a wide range of crops and fruits, including:
+
+    #### 🍎 Apple
+    - Apple scab, Black rot, Cedar apple rust, Healthy
+
+    #### 🫐 Blueberry
+    - Healthy
+
+    #### 🍒 Cherry (incl. sour)
+    - Powdery mildew, Healthy
+
+    #### 🌽 Corn (maize)
+    - Cercospora leaf spot, Common rust, Northern leaf blight, Healthy
+
+    #### 🍇 Grape
+    - Black rot, Esca (Black Measles), Leaf blight, Healthy
+
+    #### 🫒 Olive
+    - Aculus olearius, Anthracnose, Fusarium Wilt, Peacock Spots, Verticillium Wilt, Xylella fastidiosa, Olive Knot,
+      Olive fruit fly, Sooty Mold, OVYaV virus, Healthy
+
+    #### 🍊 Orange
+    - Huanglongbing (Citrus Greening)
+
+    #### 🍑 Peach
+    - Bacterial spot, Healthy
+
+    #### 🫑 Bell Pepper
+    - Bacterial spot, Healthy
+
+    #### 🥔 Potato
+    - Early blight, Late blight, Healthy
+
+    #### 🍓 Strawberry
+    - Leaf scorch, Healthy
+
+    #### 🫘 Soybean, 🧅 Squash, 🍇 Raspberry
+    - Healthy
+
+    #### 🍅 Tomato
+    - Bacterial spot, Early blight, Late blight, Leaf Mold, Septoria leaf spot,
+      Spider mites, Target Spot, Yellow Leaf Curl Virus, Mosaic Virus, Healthy
+
+    These classes were chosen based on real agricultural threats across various regions.
+
+    ### 📁 Dataset Summary
+    - **Training images:** 74,016
+    - **Classes:** 49
+    - **Input size:** 128x128 RGB
+    """)
+    
 # --- Disease Recognition ---
 elif app_mode == "Disease Recognition":
     st.header("Disease Recognition")
