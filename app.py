@@ -4,7 +4,6 @@ import numpy as np
 import os
 import gdown
 
-# --- Load model from Google Drive ---
 @st.cache_resource
 def load_model():
     model_path = "Best87K.h5"
@@ -12,7 +11,15 @@ def load_model():
         with st.spinner("⏬ Downloading model from Google Drive..."):
             file_id = "1f6CCMxy5bIFliokxIWimliyy__3bsykk"
             url = f"https://drive.google.com/uc?id={file_id}"
-            gdown.download(url, model_path, quiet=False, use_cookies=True)
+            gdown.download(url, model_path, quiet=False, fuzzy=True)
+
+        # ✅ Verify download success
+        if not os.path.exists(model_path):
+            st.error("❌ Model download failed — file not found.")
+        else:
+            size_mb = os.path.getsize(model_path) / 1_000_000
+            st.success(f"✅ Model downloaded. Size: {size_mb:.2f} MB")
+
     return tf.keras.models.load_model(model_path)
 
 model = load_model()
