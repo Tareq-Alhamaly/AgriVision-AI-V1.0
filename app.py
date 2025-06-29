@@ -104,27 +104,57 @@ app_mode = st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recogn
 # Home Page
 if app_mode == "Home":
     st.image("Header.png", width=200)
+
     st.header("AgriVision AI V1.0 - PROTOTYPE-")
-    st.image("home.jpg", use_container_width=True)
+    image_path = "home.jpg"
+    st.image(image_path, use_container_width=True)
 
     st.markdown("""
     Welcome to **AgriVision AI V1.0**, a Plant Disease Recognition System! 🌿🔍
 
-    Developed and deployed by **NAWA's AI Division**, this tool helps farmers, researchers, and agronomists quickly identify plant diseases using cutting-edge deep learning.
-
-    Upload an image of a plant leaf, and our system will analyze it to detect any signs of disease or confirm plant health.
+    Developed by the **AI-Division at NAWA Engineering**, this system helps identify plant diseases using deep learning.
 
     ---
 
-    ### 🚀 How It Works
+    ### 📌 How It Works
 
-    1. 📸 **Upload an Image**: Navigate to the **Disease Recognition** page.
-    2. 🧠 **AI Analysis**: The model inspects the uploaded image.
-    3. 📋 **Results & Recommendations**: You receive the diagnosis and actionable treatment steps.
+    1. **Upload Image** → in the **Disease Recognition** tab
+    2. **Analyze Leaf** → using our trained AI model
+    3. **Get Result** → with a treatment recommendation
 
     ---
 
-    ### 🌟 Why Choose AgriVision AI?
+    ### 💼 Contact Information
+
+    - 📧 **Emails**:
+        - [tarek.alhamaly@nawa-eng.com.ly](mailto:tarek.alhamaly@nawa-eng.com.ly)
+        - [firas.m@nawa-eng.com.ly](mailto:firas.m@nawa-eng.com.ly)
+
+    - 📞 **Phone Numbers**:
+        - +218 91 788 0952
+        - +216 28 163 411
+
+    ---
+
+    ### 📄 Download Project Summary (PDF)
+
+    You can download the project brochure or documentation here:
+
+    """)
+
+    # PDF download button
+    with open("Datasheet.pdf", "rb") as pdf_file:
+        PDFbyte = pdf_file.read()
+
+    st.download_button(label="📥 Download PDF",
+                       data=PDFbyte,
+                       file_name="AgriVision_Project_Summary.pdf",
+                       mime='application/pdf')
+
+    st.markdown("""
+    ---
+
+    ### ✅ Why Choose AgriVision AI?
 
     - ✅ **High Accuracy**: Trained on over **74,000 images** across **49 plant disease and health classes**.
     - 💻 **User-Friendly**: Clean, responsive web interface powered by **Streamlit**.
@@ -136,6 +166,7 @@ if app_mode == "Home":
 
     👉 Click on the **Disease Recognition** tab in the sidebar to begin!
     """)
+
 
 # About Page
 elif app_mode == "About":
