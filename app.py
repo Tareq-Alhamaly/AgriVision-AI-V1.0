@@ -105,7 +105,7 @@ app_mode = st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recogn
 if app_mode == "Home":
     st.image("Header.png", width=200)
     st.header("AgriVision AI V1.0 - PROTOTYPE-")
-    st.image("home.jpg", use_column_width=True)
+    st.image("home.jpg", use_container_width=True)
 
     st.markdown("""
     Welcome to **AgriVision AI V1.0**, a Plant Disease Recognition System! 🌿🔍
