@@ -110,10 +110,10 @@ if app_mode == "Home":
     st.image(image_path, use_container_width=True)
 
     st.markdown("""
-    Welcome to **AgriVision AI V1.0**, a Plant Disease Recognition System! 🌿🔍
+    Welcome to AgriVision AI V1.0, a Plant Disease Recognition System! 🌿🔍
 
-    Developed by the **AI-Division at NAWA Engineering**, this system helps identify plant diseases using deep learning.
-
+    Designed, tested & deployed by **NAWA's** AI-Division to help identify plant diseases efficiently.
+    Upload an image of a plant, and our system will analyze it to detect any signs of disease.
     ---
 
     ### 📌 How It Works
@@ -130,11 +130,15 @@ if app_mode == "Home":
         - [tarek.alhamaly@nawa-eng.com.ly](mailto:tarek.alhamaly@nawa-eng.com.ly)
         - [firas.m@nawa-eng.com.ly](mailto:firas.m@nawa-eng.com.ly)
 
+
+
     - 📞 **Phone Numbers**:
         - +218 91 788 0952
         - +216 28 163 411
 
     ---
+
+
 
     ### 📄 Download Project Summary (PDF)
 
