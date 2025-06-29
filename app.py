@@ -115,15 +115,15 @@ if app_mode == "Home":
     Designed, tested & deployed by **NAWA's** AI-Division to help identify plant diseases efficiently.
     Upload an image of a plant, and our system will analyze it to detect any signs of disease.
 
-    ### How It Works
+    ### ✅ How It Works
     1. **Upload Image:** Go to the **Disease Recognition** page.
     2. **Analysis:** Our AI model analyzes the image.
     3. **Results:** View results and recommendations.
 
     ### ✅ Why Choose AgriVision AI?
 
-    - ✅ **High Accuracy**: Trained on over **74,000 images** across **49 plant disease and health classes**.
-    - 💻 **User-Friendly**: Clean, responsive web interface powered by **Streamlit**.
+    -  **High Accuracy**: Trained on over **74,000 images** across **49 plant disease and health classes**.
+    -  **User-Friendly**: Clean, responsive web interface powered by **Streamlit**.
     - 
     ---
     ### 📄 Download Project Summary (PDF)
