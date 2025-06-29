@@ -142,37 +142,60 @@ elif app_mode == "About":
     st.header("About the Project")
     st.markdown("""
     ### 🧠 Model Overview
+    This model is trained on a diverse dataset of **74,016 images** belonging to **49 classes**.
+    It uses deep learning to detect various **plant diseases** and distinguish them from healthy samples.
 
-    This AI model was trained on a large, diverse dataset of **74,016 leaf images**, each labeled with one of **49 plant disease or healthy conditions**. It uses **deep convolutional neural networks** to recognize disease patterns and provide reliable classifications.
+    ### 🌱 Supported Plant Types
 
-    ---
+    The system supports a wide range of crops and fruits, including:
 
-    ### 🌿 Supported Plant Types
+    #### 🍎 Apple
+    - Apple scab, Black rot, Cedar apple rust, Healthy
 
-    The model supports a wide variety of crops and fruits, including:
+    #### 🫐 Blueberry
+    - Healthy
 
-    - 🍎 Apple: Apple scab, Black rot, Cedar apple rust, Healthy
-    - 🫐 Blueberry: Healthy
-    - 🍒 Cherry: Powdery mildew, Healthy
-    - 🌽 Corn: Cercospora leaf spot, Common rust, Northern leaf blight, Healthy
-    - 🍇 Grape: Black rot, Esca (Black Measles), Leaf blight, Healthy
-    - 🫒 Olive: Aculus olearius, Anthracnose, Fusarium Wilt, Peacock Spots, Verticillium Wilt, Xylella fastidiosa, Olive Knot, Olive fruit fly, Sooty Mold, OVYaV, Healthy
-    - 🍊 Orange: Citrus greening (HLB)
-    - 🍑 Peach: Bacterial spot, Healthy
-    - 🫑 Bell Pepper: Bacterial spot, Healthy
-    - 🥔 Potato: Early blight, Late blight, Healthy
-    - 🍓 Strawberry: Leaf scorch, Healthy
-    - 🫘 Soybean, 🧅 Squash, 🍇 Raspberry: Healthy
-    - 🍅 Tomato: 10 diseases + Healthy
+    #### 🍒 Cherry (incl. sour)
+    - Powdery mildew, Healthy
 
-    ---
+    #### 🌽 Corn (maize)
+    - Cercospora leaf spot, Common rust, Northern leaf blight, Healthy
+
+    #### 🍇 Grape
+    - Black rot, Esca (Black Measles), Leaf blight, Healthy
+
+    #### 🫒 Olive
+    - Aculus olearius, Anthracnose, Fusarium Wilt, Peacock Spots, Verticillium Wilt, Xylella fastidiosa, Olive Knot,
+      Olive fruit fly, Sooty Mold, OVYaV virus, Healthy
+
+    #### 🍊 Orange
+    - Huanglongbing (Citrus Greening)
+
+    #### 🍑 Peach
+    - Bacterial spot, Healthy
+
+    #### 🫑 Bell Pepper
+    - Bacterial spot, Healthy
+
+    #### 🥔 Potato
+    - Early blight, Late blight, Healthy
+
+    #### 🍓 Strawberry
+    - Leaf scorch, Healthy
+
+    #### 🫘 Soybean, 🧅 Squash, 🍇 Raspberry
+    - Healthy
+
+    #### 🍅 Tomato
+    - Bacterial spot, Early blight, Late blight, Leaf Mold, Septoria leaf spot,
+      Spider mites, Target Spot, Yellow Leaf Curl Virus, Mosaic Virus, Healthy
+
+    These classes were chosen based on real agricultural threats across various regions.
 
     ### 📁 Dataset Summary
-
-    - **Total images**: 74,016
-    - **Classes**: 49 (diseases + healthy)
-    - **Input size**: 128×128 RGB
-    - **Model type**: Deep CNN optimized for mobile
+    - **Training images:** 74,016
+    - **Classes:** 49
+    - **Input size:** 128x128 RGB
     """)
 
 # Disease Recognition Page
