@@ -1,40 +1,33 @@
 import streamlit as st
-import tensorflow as tf
 import numpy as np
-import os
-import gdown
+from PIL import Image
+import tensorflow as tf
 
-
+# Load TFLite model
 @st.cache_resource
-def load_model():
-    model_path = "Best87K.h5"
-    if not os.path.exists(model_path):
-        with st.spinner("⏬ Downloading model from Google Drive..."):
-            file_id = "1f6CCMxy5bIFliokxIWimliyy__3bsykk"
-            url = f"https://drive.google.com/uc?id={file_id}"
-            gdown.download(url, model_path, quiet=False, fuzzy=True)
+def load_tflite_model():
+    interpreter = tf.lite.Interpreter(model_path="Best87K_quant.tflite")
+    interpreter.allocate_tensors()
+    return interpreter
 
-        # ✅ Verify download success
-        if not os.path.exists(model_path):
-            st.error("❌ Model download failed — file not found.")
-        else:
-            size_mb = os.path.getsize(model_path) / 1_000_000
-            st.success(f"✅ Model downloaded. Size: {size_mb:.2f} MB")
-
-    return tf.keras.models.load_model(model_path)
-
-model = load_model()
-
-# --- Predict function ---
-def model_prediction(test_image):
-    image = tf.keras.preprocessing.image.load_img(test_image, target_size=(128, 128))
-    input_arr = tf.keras.preprocessing.image.img_to_array(image) / 255.0
+# Run inference using TFLite
+def model_prediction_tflite(test_image, interpreter):
+    image = Image.open(test_image).resize((128, 128)).convert("RGB")
+    input_arr = np.array(image, dtype=np.float32)
     input_arr = np.expand_dims(input_arr, axis=0)
-    predictions = model.predict(input_arr)
-    return np.argmax(predictions), np.max(predictions)
 
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
 
-# Class names list (49 classes)
+    interpreter.set_tensor(input_details[0]['index'], input_arr)
+    interpreter.invoke()
+
+    predictions = interpreter.get_tensor(output_details[0]['index'])[0]
+    result_index = np.argmax(predictions)
+    confidence = np.max(predictions)
+    return result_index, confidence
+
+# Class names list
 class_name = [
     'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy',
     'Blueberry___healthy', 'Cherry_(including_sour)___Powdery_mildew', 'Cherry_(including_sour)___healthy',
@@ -51,7 +44,7 @@ class_name = [
     'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 'Tomato___Tomato_mosaic_virus', 'Tomato___healthy'
 ]
 
-# Recommendations dictionary
+# Recommendations dictionary (same as earlier — omitted here for brevity)
 recommendations = {
     'Apple___Apple_scab': "Use fungicides containing captan or myclobutanil. Prune infected leaves.",
     'Apple___Black_rot': "Remove and destroy mummified fruits. Apply fungicide sprays during bloom.",
@@ -104,37 +97,44 @@ recommendations = {
     'Tomato___healthy': "Healthy tomato plant. Maintain balanced fertilization."
 }
 
-
 # Sidebar
 st.sidebar.title("Dashboard")
 app_mode = st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"])
 
-# Home Page with Logo
+# Home Page
 if app_mode == "Home":
     st.image("Header.png", width=200)
-
-    st.header("AgriVision AI V1.0 -PROTOTYPE-")
-    image_path = "home.jpg"
-    st.image(image_path, use_container_width=True)
+    st.header("AgriVision AI V1.0 - PROTOTYPE-")
+    st.image("home.jpg", use_column_width=True)
 
     st.markdown("""
-    Welcome to AgriVision AI V1.0, a Plant Disease Recognition System! 🌿🔍
+    Welcome to **AgriVision AI V1.0**, a Plant Disease Recognition System! 🌿🔍
 
-    Designed, tested & deployed by **NAWA's** AI-Division to help identify plant diseases efficiently.
-    Upload an image of a plant, and our system will analyze it to detect any signs of disease.
+    Developed and deployed by **NAWA's AI Division**, this tool helps farmers, researchers, and agronomists quickly identify plant diseases using cutting-edge deep learning.
 
-    ### How It Works
-    1. **Upload Image:** Go to the **Disease Recognition** page.
-    2. **Analysis:** Our AI model analyzes the image.
-    3. **Results:** View results and recommendations.
+    Upload an image of a plant leaf, and our system will analyze it to detect any signs of disease or confirm plant health.
 
-    ### Why Choose Us?
-    - **Accurate:** Trained on over 74,000 images across 49 classes.
-    - **User-Friendly:** Clean, responsive interface.
-    - **Fast & Efficient:** Predictions in seconds.
+    ---
 
-    ### Get Started
-    Head over to the **Disease Recognition** tab to try it out!
+    ### 🚀 How It Works
+
+    1. 📸 **Upload an Image**: Navigate to the **Disease Recognition** page.
+    2. 🧠 **AI Analysis**: The model inspects the uploaded image.
+    3. 📋 **Results & Recommendations**: You receive the diagnosis and actionable treatment steps.
+
+    ---
+
+    ### 🌟 Why Choose AgriVision AI?
+
+    - ✅ **High Accuracy**: Trained on over **74,000 images** across **49 plant disease and health classes**.
+    - 💻 **User-Friendly**: Clean, responsive web interface powered by **Streamlit**.
+    - ⚡ **Fast Inference**: Get predictions in seconds — even on low-resource devices.
+
+    ---
+
+    ### 📍 Get Started
+
+    👉 Click on the **Disease Recognition** tab in the sidebar to begin!
     """)
 
 # About Page
@@ -142,66 +142,43 @@ elif app_mode == "About":
     st.header("About the Project")
     st.markdown("""
     ### 🧠 Model Overview
-    This model is trained on a diverse dataset of **74,016 images** belonging to **49 classes**.
-    It uses deep learning to detect various **plant diseases** and distinguish them from healthy samples.
 
-    ### 🌱 Supported Plant Types
+    This AI model was trained on a large, diverse dataset of **74,016 leaf images**, each labeled with one of **49 plant disease or healthy conditions**. It uses **deep convolutional neural networks** to recognize disease patterns and provide reliable classifications.
 
-    The system supports a wide range of crops and fruits, including:
+    ---
 
-    #### 🍎 Apple
-    - Apple scab, Black rot, Cedar apple rust, Healthy
+    ### 🌿 Supported Plant Types
 
-    #### 🫐 Blueberry
-    - Healthy
+    The model supports a wide variety of crops and fruits, including:
 
-    #### 🍒 Cherry (incl. sour)
-    - Powdery mildew, Healthy
+    - 🍎 Apple: Apple scab, Black rot, Cedar apple rust, Healthy
+    - 🫐 Blueberry: Healthy
+    - 🍒 Cherry: Powdery mildew, Healthy
+    - 🌽 Corn: Cercospora leaf spot, Common rust, Northern leaf blight, Healthy
+    - 🍇 Grape: Black rot, Esca (Black Measles), Leaf blight, Healthy
+    - 🫒 Olive: Aculus olearius, Anthracnose, Fusarium Wilt, Peacock Spots, Verticillium Wilt, Xylella fastidiosa, Olive Knot, Olive fruit fly, Sooty Mold, OVYaV, Healthy
+    - 🍊 Orange: Citrus greening (HLB)
+    - 🍑 Peach: Bacterial spot, Healthy
+    - 🫑 Bell Pepper: Bacterial spot, Healthy
+    - 🥔 Potato: Early blight, Late blight, Healthy
+    - 🍓 Strawberry: Leaf scorch, Healthy
+    - 🫘 Soybean, 🧅 Squash, 🍇 Raspberry: Healthy
+    - 🍅 Tomato: 10 diseases + Healthy
 
-    #### 🌽 Corn (maize)
-    - Cercospora leaf spot, Common rust, Northern leaf blight, Healthy
-
-    #### 🍇 Grape
-    - Black rot, Esca (Black Measles), Leaf blight, Healthy
-
-    #### 🫒 Olive
-    - Aculus olearius, Anthracnose, Fusarium Wilt, Peacock Spots, Verticillium Wilt, Xylella fastidiosa, Olive Knot,
-      Olive fruit fly, Sooty Mold, OVYaV virus, Healthy
-
-    #### 🍊 Orange
-    - Huanglongbing (Citrus Greening)
-
-    #### 🍑 Peach
-    - Bacterial spot, Healthy
-
-    #### 🫑 Bell Pepper
-    - Bacterial spot, Healthy
-
-    #### 🥔 Potato
-    - Early blight, Late blight, Healthy
-
-    #### 🍓 Strawberry
-    - Leaf scorch, Healthy
-
-    #### 🫘 Soybean, 🧅 Squash, 🍇 Raspberry
-    - Healthy
-
-    #### 🍅 Tomato
-    - Bacterial spot, Early blight, Late blight, Leaf Mold, Septoria leaf spot,
-      Spider mites, Target Spot, Yellow Leaf Curl Virus, Mosaic Virus, Healthy
-
-    These classes were chosen based on real agricultural threats across various regions.
+    ---
 
     ### 📁 Dataset Summary
-    - **Training images:** 74,016
-    - **Classes:** 49
-    - **Input size:** 128x128 RGB
+
+    - **Total images**: 74,016
+    - **Classes**: 49 (diseases + healthy)
+    - **Input size**: 128×128 RGB
+    - **Model type**: Deep CNN optimized for mobile
     """)
-    
-# --- Disease Recognition ---
+
+# Disease Recognition Page
 elif app_mode == "Disease Recognition":
     st.header("Disease Recognition")
-    test_image = st.file_uploader("Upload a plant leaf image:")
+    test_image = st.file_uploader("Choose an image of a plant leaf:")
 
     if test_image is not None:
         if st.button("Show Image"):
@@ -209,19 +186,21 @@ elif app_mode == "Disease Recognition":
 
         if st.button("Predict"):
             st.snow()
-            with st.spinner("Analyzing image..."):
-                
-                result_index, confidence = model_prediction(test_image)
+            st.write("🔎 Analyzing image...")
 
-            st.write(f"📊 Confidence: **{confidence:.2f}**")
+            interpreter = load_tflite_model()
+            result_index, confidence = model_prediction_tflite(test_image, interpreter)
+
+            st.write(f"📊 Prediction Confidence: **{confidence:.2f}**")
 
             if confidence < 0.5:
                 st.warning("⚠️ The model does NOT confidently recognize this disease.")
-                st.info("Please try with a clearer or different leaf image.")
+                st.info("Try with a clearer or different image.")
             elif 0 <= result_index < len(class_name):
                 disease = class_name[result_index]
-                st.success(f"✅ Prediction: **{disease}**")
-                recommendation_message = recommendations.get(disease, "🧪 No specific recommendation available yet.")
+                st.success(f"✅ Model predicts: **{disease}**")
+
+                recommendation_message = recommendations.get(disease, "🧪 No specific recommendation available.")
                 st.info(f"💡 Recommendation: {recommendation_message}")
             else:
-                st.error("❌ Prediction index is invalid.")
+                st.error("❌ Invalid prediction index.")
