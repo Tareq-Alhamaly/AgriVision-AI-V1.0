@@ -114,14 +114,16 @@ if app_mode == "Home":
 
     Designed, tested & deployed by **NAWA's** AI-Division to help identify plant diseases efficiently.
     Upload an image of a plant, and our system will analyze it to detect any signs of disease.
-    ---
 
-    ### 📌 How It Works
+    ### How It Works
+    1. **Upload Image:** Go to the **Disease Recognition** page.
+    2. **Analysis:** Our AI model analyzes the image.
+    3. **Results:** View results and recommendations.
 
-    1. **Upload Image** → in the **Disease Recognition** tab
-    2. **Analyze Leaf** → using our trained AI model
-    3. **Get Result** → with a treatment recommendation
-
+    ### Why Choose Us?
+    - **Accurate:** Trained on over 74,000 images across 49 classes.
+    - **User-Friendly:** Clean, responsive interface.
+    - **Fast & Efficient:** Predictions in seconds.
     ---
 
     ### 💼 Contact Information
