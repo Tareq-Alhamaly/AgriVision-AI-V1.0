@@ -120,28 +120,12 @@ if app_mode == "Home":
     2. **Analysis:** Our AI model analyzes the image.
     3. **Results:** View results and recommendations.
 
-    ### Why Choose Us?
-    - **Accurate:** Trained on over 74,000 images across 49 classes.
-    - **User-Friendly:** Clean, responsive interface.
-    - **Fast & Efficient:** Predictions in seconds.
+    ### ✅ Why Choose AgriVision AI?
+
+    - ✅ **High Accuracy**: Trained on over **74,000 images** across **49 plant disease and health classes**.
+    - 💻 **User-Friendly**: Clean, responsive web interface powered by **Streamlit**.
+    - 
     ---
-
-    ### 💼 Contact Information
-
-    - 📧 **Emails**:
-        - [tarek.alhamaly@nawa-eng.com.ly](mailto:tarek.alhamaly@nawa-eng.com.ly)
-        - [firas.m@nawa-eng.com.ly](mailto:firas.m@nawa-eng.com.ly)
-
-
-
-    - 📞 **Phone Numbers**:
-        - +218 91 788 0952
-        - +216 28 163 411
-
-    ---
-
-
-
     ### 📄 Download Project Summary (PDF)
 
     You can download the project brochure or documentation here:
@@ -158,15 +142,24 @@ if app_mode == "Home":
                        mime='application/pdf')
 
     st.markdown("""
+
+    
     ---
 
-    ### ✅ Why Choose AgriVision AI?
+    ### 💼 Contact Information
 
-    - ✅ **High Accuracy**: Trained on over **74,000 images** across **49 plant disease and health classes**.
-    - 💻 **User-Friendly**: Clean, responsive web interface powered by **Streamlit**.
-    - ⚡ **Fast Inference**: Get predictions in seconds — even on low-resource devices.
+    - 📧 **Emails**:
+        - [tarek.alhamaly@nawa-eng.com.ly](mailto:tarek.alhamaly@nawa-eng.com.ly)
+        - [firas.m@nawa-eng.com.ly](mailto:firas.m@nawa-eng.com.ly)
 
+
+
+    - 📞 **Phone Numbers**:
+        - +218 91 788 0952
+        - +216 28 163 411
+        
     ---
+
 
     ### 📍 Get Started
 
